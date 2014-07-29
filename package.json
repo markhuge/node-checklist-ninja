@@ -1,0 +1,32 @@
+{
+  "name": "checklist-ninja",
+  "version": "0.0.0",
+  "description": "A Node.js client for the http://checklist.ninja API",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run unit",
+    "unit": "mocha -R spec"
+  },
+  "keywords": [
+    "checklist",
+    "checklist",
+    "ninja",
+    "devops"
+  ],
+  "author": "Mark Wilkerson <mark@segfawlt.net>",
+  "license": "MIT",
+  "dependencies": {
+    "JSONStream": "^0.8.4",
+    "event-stream": "^3.1.7",
+    "lodash.merge": "^2.4.1",
+    "query-params": "0.0.1",
+    "request": "^2.39.0"
+  },
+  "devDependencies": {
+    "blanket": "^1.1.6",
+    "chai": "^1.9.1",
+    "mocha": "^1.21.3",
+    "sinon": "^1.10.3",
+    "travis-cov": "^0.2.5"
+  }
+}
