@@ -9,6 +9,14 @@ var request = require('request'),
     config  = {};
 
 
+// prepare payloads
+function parsePayload(input) {
+  if (typeof input === "object") { return input; }
+  var obj = { title: input };
+  return obj;
+}
+
+
 this.config = function (config) {
   if (config) { this.config = merge(this.config,config); }
   return this.config;
