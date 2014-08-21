@@ -6,6 +6,7 @@ var request = require('request'),
     crypto  = require('crypto'),
     baseURI = 'https://api.checklist.ninja',
     merge   = require('lodash.merge'),
+    url     = require('url'),
     config  = {};
 
 
@@ -16,15 +17,17 @@ function parsePayload(input) {
   return obj;
 }
 
-
 this.config = function (config) {
   if (config) { this.config = merge(this.config,config); }
   return this.config;
 };
 
 this.sign = function (method, resource, date) {
-    var str     = this.config.secret + '\n' + date + '\n' + method + '\n' + resource + '\n',
+    var parsedUrl = url.parse(resource);
+    var str     = this.config.secret + '\n' + date + '\n' + method + '\n' + parsedUrl.pathname + '\n',
         shasum  = crypto.createHash('sha1'); // this may be okay at higher scope
+
+    console.log(str)
     
     shasum.update(str);
     return shasum.digest('hex');
@@ -69,12 +72,6 @@ this.patch = function (endpoint, payload, callback) {
   this.raw('PATCH',endpoint, payload, callback);
 };
 
-
 this.delete = function (endpoint, callback) {
   this.raw('DELETE',endpoint,callback);
 };
-
-
-
-
-
