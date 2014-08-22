@@ -6,6 +6,7 @@ var request = require('request'),
     crypto  = require('crypto'),
     baseURI = 'https://api.checklist.ninja',
     merge   = require('lodash.merge'),
+    url     = require('url'),
     config  = {};
 
 
@@ -16,14 +17,14 @@ function parsePayload(input) {
   return obj;
 }
 
-
 this.config = function (config) {
   if (config) { this.config = merge(this.config,config); }
   return this.config;
 };
 
 this.sign = function (method, resource, date) {
-    var str     = this.config.secret + '\n' + date + '\n' + method + '\n' + resource + '\n',
+    var parsedUrl = url.parse(resource);
+    var str     = this.config.secret + '\n' + date + '\n' + method + '\n' + parsedUrl.pathname + '\n',
         shasum  = crypto.createHash('sha1'); // this may be okay at higher scope
     
     shasum.update(str);
@@ -33,8 +34,10 @@ this.sign = function (method, resource, date) {
 this.date = function () { return new Date().toUTCString(); };
 
 this.raw = function (method, endpoint, payload, callback) {
-    if (arguments.length === 3) { callback = payload; } // allow for optional payload
-    
+    if (arguments.length === 3) {
+        callback = payload;
+    }
+
     var date    = this.date(),
         sig     = this.sign(method, endpoint, date),
         headers = {
@@ -42,19 +45,27 @@ this.raw = function (method, endpoint, payload, callback) {
           'date'         : date
         },
         options = { url: baseURI + endpoint, method: method, headers: headers };
-    
-    request(options)
-      .pipe(json.parse('*')) // parse everything for now
-      .pipe(es.mapSync(function (data){
-      callback(undefined,data);
-    }));
+
+        if (arguments.length === 4) {
+            options.body = JSON.stringify(payload)
+        }
+
+    request(options, function (error, response, body) {
+        if (!error) {
+            if (response.statusCode == 204) {
+                return callback(undefined, response.statusCode, null)
+            }
+            return callback(undefined, response.statusCode, JSON.parse(body))
+        }
+        return callback(error, null, null)
+    });
   };
 
 
 // Sugar
 
 this.get = function (endpoint, callback) {
-  this.raw('GET',endpoint,callback);
+  this.raw('GET',endpoint, callback);
 };
 
 this.post = function (endpoint, payload, callback) {
@@ -69,12 +80,6 @@ this.patch = function (endpoint, payload, callback) {
   this.raw('PATCH',endpoint, payload, callback);
 };
 
-
 this.delete = function (endpoint, callback) {
-  this.raw('DELETE',endpoint,callback);
+  this.raw('DELETE', endpoint, callback);
 };
-
-
-
-
-

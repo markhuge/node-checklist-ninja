@@ -4,7 +4,6 @@ var expect = require('chai').expect,
 
 describe("Checklist Ninja", function () {
 
-
   it("Config", function(){
     ninja.config({secret:'foo'});
     var config = ninja.config({pubkey:'bar'});
@@ -12,5 +11,9 @@ describe("Checklist Ninja", function () {
     expect(config).to.have.deep.property('pubkey','bar');
   });
 
+  it("sign", function() {
+  	var signature = ninja.sign('GET', '/path/to?key=value', 'date')
+    expect(signature).to.equal('ok');
+  })
 
 });
