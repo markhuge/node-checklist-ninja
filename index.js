@@ -7,7 +7,7 @@ var request = require('request'),
     baseURI = 'https://api.checklist.ninja',
     merge   = require('lodash.merge'),
     url     = require('url'),
-    config  = {};
+    config  = { host: baseURI };
 
 
 // prepare payloads
@@ -44,7 +44,7 @@ this.raw = function (method, endpoint, payload, callback) {
           'authorization': 'ChecklistNinja ' + this.config.pubkey +  ':' + sig,
           'date'         : date
         },
-        options = { url: baseURI + endpoint, method: method, headers: headers };
+        options = { url: this.config.host + endpoint, method: method, headers: headers };
 
         if (arguments.length === 4) {
             options.body = JSON.stringify(payload)
