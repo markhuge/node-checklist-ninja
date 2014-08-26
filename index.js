@@ -93,6 +93,10 @@ this.findAccount = function(email, callback) {
   this.getOrFail(endpoint, 'Could not load account.', callback)
 }
 
+this.getChecklists = function(callback) {
+  this.getOrFail('/checklists', 'Could not load checklists.', callback)
+}
+
 this.getChecklist = function(checklistId, callback) {
   this.getOrFail('/checklists/' + checklistId, 'Could not load checklist.', callback)
 }
@@ -103,6 +107,62 @@ this.getChecklistEvents = function(checklistId, callback) {
 
 this.getChecklistWebhooks = function(checklistId, callback) {
   this.getOrFail('/checklists/' + checklistId + '/webhooks', 'Could not load checklist webhooks.', callback)
+}
+
+// TODO: Verify that the 2nd param is an array of strings.
+this.createChecklist = function(title, tags, callback) {
+  var payload = {
+    'title': title
+  }
+
+  // If createChecklist('title', fn)
+  if (arguments.length === 2) {
+    callback = tags;
+  } else {
+    // if createChecklist('title', ['foo'], callback)
+    payload.tags = tags
+  }
+
+  this.post('/checklists', payload, function(error, code, data) {
+    if (!err && code == 201) {
+      return callback(null, data)
+    }
+    callback(new Error('Could not create checklist.'))
+  });
+}
+
+this.createItem = function(checklistId, displayText, parent, position, callback) {
+
+  // TODO: Ensure position is serialized as a number.
+  var payload = {
+    'display_text': displayText,
+    'parent': parent,
+    'position': position
+  }
+
+  this.post('/checklists/' + checklistId + '/items', payload, function(error, code, data) {
+    if (!err && code == 201) {
+      return callback(null, data)
+    }
+    callback(new Error('Could not create checklist item.'))
+  });
+}
+
+this.createGroup = function(checklistId, label, parent, position, callback) {
+
+  // TODO: Ensure position is serialized as a number.
+  var payload = {
+    'label': label,
+    'parent': parent,
+    'position': position
+  }
+
+  this.post('/checklists/' + checklistId + '/groups', payload, function(error, code, data) {
+    if (!err && code == 201) {
+      return callback(null, data)
+    }
+    callback(new Error('Could not create checklist group.'))
+  });
 }
 
 this.getOrFail = function(endpoint, message, callback) {
