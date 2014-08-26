@@ -1,29 +1,38 @@
 var expect = require('chai').expect,
     sinon  = require('sinon'),
-    ninja  = require('../');
+    ninja  = require('../'),
+    request = require('request'),
+    mock   = require('./mocks');
+
 
 
 describe("Requests", function () {
 
-  it("raw",function (done) {
-    ninja.raw('GET', '/checklists', {foo: "bar"}, function (err, statuscode, body){
-      expect(err).to.not.be.ok;
-      expect(statuscode).to.equal(200);
-      done();
+  describe("raw", function () {
+    it("with payload", function (done) {
+      ninja.raw('GET', '/checklists', {foo: "bar"}, function (err, statuscode, body){
+        expect(err).to.not.be.ok;
+        expect(statuscode).to.equal(200);
+        done();
+      });
+
     });
 
-  });
+    it("without payload",function (done) {
+      ninja.raw('GET', '/checklists', function (err, statuscode, body){
+        expect(err).to.not.be.ok;
+        expect(statuscode).to.equal(200);
+        done();
+      });
+
+    });
+});
 
 describe("Wrappers", function () {
 
     beforeEach(function(){
-      sinon.stub(ninja, 'raw', function(method, endpoint, payload, callback) {
-        if (arguments.length === 3) {
-          callback = payload;
-        }
-        callback(null, 200, {method: method, endpoint: endpoint, payload: payload });
-      });
-    });
+     sinon.stub(ninja, 'raw', mock.raw);
+    })
 
     afterEach(function(){ ninja.raw.restore();});
 
@@ -72,7 +81,7 @@ describe("Wrappers", function () {
     });
 
     it("delete",function (done){
-    ninja.delete('/test', function (err, statuscode, body) {
+      ninja.delete('/test', function (err, statuscode, body) {
         expect(err).to.not.be.ok;
         expect(statuscode).to.equal(200);
         expect(body).to.have.deep.property('method','DELETE');
@@ -81,5 +90,39 @@ describe("Wrappers", function () {
 
     });
   });
+
+
+  describe("Get or fail", function () {
+    beforeEach(function () {
+      sinon.stub(ninja, 'get', mock.get);
+    });
+
+    afterEach(function () {
+      ninja.get.restore();
+    });
+
+    it("Get or fail: success", function (done) {
+      ninja.getOrFail('/test', "message", function (err, data) {
+        expect(err).to.not.be.ok;
+        expect(data).to.equal('/test');
+        done();
+      });
+    });
+
+    it("Get or fail: fail on statusCode", function (done) {
+      ninja.getOrFail('/failcode', "failed on status code", function (err, data) {
+        expect(err).to.equal('failed on status code');
+        done();
+      });
+    });
+
+    it("Get or fail success", function (done) {
+      ninja.getOrFail('/failerr', "failed on err", function (err, data) {
+        expect(err).to.equal('failed on err');
+        done();
+      });
+    });
+  });
+
 
 });
