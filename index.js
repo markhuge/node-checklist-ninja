@@ -111,21 +111,11 @@ this.getChecklistWebhooks = function(checklistId, callback) {
   this.getOrFail('/checklists/' + checklistId + '/webhooks', 'Could not load checklist webhooks.', callback);
 };
 
-// TODO: Verify that the 2nd param is an array of strings.
-this.createChecklist = function(title, tags, callback) {
-  var payload = {
-    'title': title
-  };
 
-  // If createChecklist('title', fn)
-  if (arguments.length === 2) {
-    callback = tags;
-  } else {
-    // if createChecklist('title', ['foo'], callback)
-    payload.tags = tags;
-  }
+this.createChecklist = function(title, callback) {
+  var payload = parsePayload(title);
 
-  this.put('/checklists', payload, function(error, code, data) {
+  this.put('/checklists', payload, function(err, code, data) {
     if (!err && code == 201) {
       return callback(null, data);
     }
