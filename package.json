@@ -1,6 +1,6 @@
 {
   "name": "checklist-ninja",
-  "version": "0.0.0",
+  "version": "1.0.0-rc.1",
   "description": "A Node.js client for the http://checklist.ninja API",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,19 @@
     "devops"
   ],
   "author": "Mark Wilkerson <mark@segfawlt.net>",
+  "contributors": [{
+    "name": "Nick Gerakines",
+    "email": "nick@gerakines.net",
+    "url": "http://ngerakines.me/"
+  }],
   "license": "MIT",
+  "bugs": {
+    "url" : "http://github.com/markhuge/node-checklist-ninja/issues"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "http://github.com/markhuge/node-checklist-ninja.git"
+  },
   "dependencies": {
     "JSONStream": "^0.8.4",
     "event-stream": "^3.1.7",

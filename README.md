@@ -1,18 +1,12 @@
-# Hi there. Don't use this yet
-
-The checklist.ninja API is still in a bit of flux. I'm publishing this early to facilitate some testing and collaboration. 
-
-
-node-checklist-ninja
-====================
+# node-checklist-ninja
 
 > A Node.js module for interacting with the https://checklist.ninja API
 
-
+A word of caution: This library is being actively developed. It was originally made to facilitate testing and collaboration, but this library's interfaces as well as the Checklist Ninja API may change.
 
 ## Install
 
-`npm install checklist-ninja`
+    $ npm install checklist-ninja
 
 ## Usage
 
@@ -24,8 +18,8 @@ ninja.config({
   pubkey: <my public API key>
 });
 
-ninja.createList("My new list", function(err, listID) {
-  console.log("My new list: ", listID)
+ninja.createChecklist("My new list", function(err, checklist) {
+  console.log("My new list: ", checklist)
 });
 
 ```

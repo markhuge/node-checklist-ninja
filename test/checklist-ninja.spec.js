@@ -13,7 +13,7 @@ describe("Checklist Ninja", function () {
 
   it("sign", function() {
   	var signature = ninja.sign('GET', '/path/to?key=value', 'date')
-    expect(signature).to.equal('ok');
+    expect(signature).to.equal('f48c5f1951e83de09a38af69df90c4081971422b');
   })
 
 });
