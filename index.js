@@ -65,21 +65,51 @@ this.raw = function (method, endpoint, payload, callback) {
 // Sugar
 
 this.get = function (endpoint, callback) {
-  this.raw('GET',endpoint, callback);
+  this.raw('GET', endpoint, callback);
 };
 
 this.post = function (endpoint, payload, callback) {
-  this.raw('POST',endpoint, payload, callback);
+  this.raw('POST', endpoint, payload, callback);
 };
 
 this.put = function (endpoint, payload, callback) {
-  this.raw('PUT',endpoint, payload, callback);
+  this.raw('PUT', endpoint, payload, callback);
 };
 
 this.patch = function (endpoint, payload, callback) {
-  this.raw('PATCH',endpoint, payload, callback);
+  this.raw('PATCH', endpoint, payload, callback);
 };
 
 this.delete = function (endpoint, callback) {
   this.raw('DELETE', endpoint, callback);
 };
+
+this.getAccount = function(accountId, callback) {
+  this.getOrFail('/accounts/' + accountId, 'Could not load account.', callback)
+}
+
+this.findAccount = function(email, callback) {
+  var endpoint = '/accounts?email=' + encodeURIComponent(email)
+  this.getOrFail(endpoint, 'Could not load account.', callback)
+}
+
+this.getChecklist = function(checklistId, callback) {
+  this.getOrFail('/checklists/' + checklistId, 'Could not load checklist.', callback)
+}
+
+this.getChecklistEvents = function(checklistId, callback) {
+  this.getOrFail('/checklists/' + checklistId + '/events', 'Could not load checklist events.', callback)
+}
+
+this.getChecklistWebhooks = function(checklistId, callback) {
+  this.getOrFail('/checklists/' + checklistId + '/webhooks', 'Could not load checklist webhooks.', callback)
+}
+
+this.getOrFail = function(endpoint, message, callback) {
+  this.get(endpoint, function(err, code, data) {
+    if (!err && code == 200) {
+      return callback(null, data)
+    }
+    callback(new Error(message))
+  });
+}
