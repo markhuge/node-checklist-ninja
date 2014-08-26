@@ -132,7 +132,7 @@ this.createItem = function(checklistId, displayText, parent, position, callback)
     'position': position
   };
 
-  this.put('/checklists/' + checklistId + '/items', payload, function(error, code, data) {
+  this.put('/checklists/' + checklistId + '/items', payload, function(err, code, data) {
     if (!err && code == 201) {
       return callback(null, data);
     }
@@ -149,7 +149,7 @@ this.createGroup = function(checklistId, label, parent, position, callback) {
     'position': position
   };
 
-  this.put('/checklists/' + checklistId + '/groups', payload, function(error, code, data) {
+  this.put('/checklists/' + checklistId + '/groups', payload, function(err, code, data) {
     if (!err && code == 201) {
       return callback(null, data);
     }
