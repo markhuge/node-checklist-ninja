@@ -31,7 +31,9 @@ this.sign = function (method, resource, date) {
   return shasum.digest('hex');
 };
 
-this.date = function () { return new Date().toUTCString(); };
+this.date = function () {
+  return new Date().toUTCString();
+};
 
 this.raw = function (method, endpoint, payload, callback) {
   if (arguments.length === 3) {
