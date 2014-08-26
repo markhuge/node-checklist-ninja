@@ -4,9 +4,20 @@
   "description": "A Node.js client for the http://checklist.ninja API",
   "main": "index.js",
   "scripts": {
-    "test": "npm run unit",
-    "unit": "mocha -R spec"
+    "test": "npm run unit && npm run ci-cov",
+    "unit": "mocha -R spec",
+    "cov-report": " mocha -r blanket -R html-cov > test.html ",
+    "ci-cov": " mocha -r blanket -R travis-cov"
   },
+  "config": {
+    "blanket": {
+      "pattern": "index.js",
+      "data-cover-never": "node_modules"
+    },
+    "travis-cov": {
+      "threshold": 100
+    }
+    },
   "keywords": [
     "checklist",
     "ninja",
