@@ -23,43 +23,43 @@ this.config = function (config) {
 };
 
 this.sign = function (method, resource, date) {
-    var parsedUrl = url.parse(resource);
-    var str     = this.config.secret + '\n' + date + '\n' + method + '\n' + parsedUrl.pathname + '\n',
-        shasum  = crypto.createHash('sha1'); // this may be okay at higher scope
-    
-    shasum.update(str);
-    return shasum.digest('hex');
-  };
+  var parsedUrl = url.parse(resource);
+  var str     = this.config.secret + '\n' + date + '\n' + method + '\n' + parsedUrl.pathname + '\n',
+      shasum  = crypto.createHash('sha1'); // this may be okay at higher scope
+  
+  shasum.update(str);
+  return shasum.digest('hex');
+};
 
 this.date = function () { return new Date().toUTCString(); };
 
 this.raw = function (method, endpoint, payload, callback) {
-    if (arguments.length === 3) {
-        callback = payload;
+  if (arguments.length === 3) {
+    callback = payload;
+  }
+
+  var date    = this.date(),
+      sig     = this.sign(method, endpoint, date),
+      headers = {
+        'authorization': 'ChecklistNinja ' + this.config.pubkey +  ':' + sig,
+        'date'         : date
+      },
+      options = { url: this.config.host + endpoint, method: method, headers: headers };
+
+  if (arguments.length === 4) {
+    options.body = JSON.stringify(payload)
+  }
+
+  request(options, function (error, response, body) {
+    if (!error) {
+      if (response.statusCode == 204) {
+        return callback(undefined, response.statusCode, null)
+      }
+      return callback(undefined, response.statusCode, JSON.parse(body))
     }
-
-    var date    = this.date(),
-        sig     = this.sign(method, endpoint, date),
-        headers = {
-          'authorization': 'ChecklistNinja ' + this.config.pubkey +  ':' + sig,
-          'date'         : date
-        },
-        options = { url: this.config.host + endpoint, method: method, headers: headers };
-
-        if (arguments.length === 4) {
-            options.body = JSON.stringify(payload)
-        }
-
-    request(options, function (error, response, body) {
-        if (!error) {
-            if (response.statusCode == 204) {
-                return callback(undefined, response.statusCode, null)
-            }
-            return callback(undefined, response.statusCode, JSON.parse(body))
-        }
-        return callback(error, null, null)
-    });
-  };
+    return callback(error, null, null)
+  });
+};
 
 
 // Sugar
