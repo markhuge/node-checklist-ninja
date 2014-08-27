@@ -6,9 +6,10 @@ var request = require('request'),
     crypto  = require('crypto'),
     baseURI = 'https://api.checklist.ninja',
     merge   = require('lodash.merge'),
-    url     = require('url'),
-    config  = { host: baseURI };
+    url     = require('url');
 
+// defaults
+this._config = { host: baseURI };
 
 // prepare payloads
 function parsePayload(input) {
@@ -18,8 +19,8 @@ function parsePayload(input) {
 }
 
 this.config = function (config) {
-  if (config) { this.config = merge(this.config,config); }
-  return this.config;
+  if (config) { this._config = merge(this._config,config); }
+  return this._config;
 };
 
 this.sign = function (method, resource, date) {
@@ -46,7 +47,7 @@ this.raw = function (method, endpoint, payload, callback) {
         'authorization': 'ChecklistNinja ' + this.config.pubkey +  ':' + sig,
         'date'         : date
       },
-      options = { url: this.config.host + endpoint, method: method, headers: headers };
+      options = { url: this._config.host + endpoint, method: method, headers: headers };
 
   if (arguments.length === 4) {
     options.body = JSON.stringify(payload);
