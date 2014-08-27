@@ -12,9 +12,9 @@ describe("Config", function () {
   });
 
   it(".sign()", function() {
-    var config = ninja.config({secret: 'foo', pubkey:'bar', host: 'https://checklistninja.apiary-mock.com'}),
-        signature = ninja.sign('GET', '/path/to?key=value', 'date');
-    expect(signature).to.equal('d0df3b47811af73aa782102c975a3c451a80e32c');
+    var config = ninja.config({secret: 'foo', pubkey:'bar', host: 'https://checklistninja.apiary-mock.com'});
+    var signature = ninja.sign('GET', '/path/to?key=value', 'date');
+    expect(signature).to.equal('f48c5f1951e83de09a38af69df90c4081971422b');
   });
 
 });

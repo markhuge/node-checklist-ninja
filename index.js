@@ -25,7 +25,7 @@ this.config = function (config) {
 
 this.sign = function (method, resource, date) {
   var parsedUrl = url.parse(resource);
-  var str     = this.config.secret + '\n' + date + '\n' + method + '\n' + parsedUrl.pathname + '\n',
+  var str     = this._config.secret + '\n' + date + '\n' + method + '\n' + parsedUrl.pathname + '\n',
       shasum  = crypto.createHash('sha1'); // this may be okay at higher scope
   
   shasum.update(str);
@@ -44,7 +44,7 @@ this.raw = function (method, endpoint, payload, callback) {
   var date    = this.date(),
       sig     = this.sign(method, endpoint, date),
       headers = {
-        'authorization': 'ChecklistNinja ' + this.config.pubkey +  ':' + sig,
+        'authorization': 'ChecklistNinja ' + this._config.pubkey +  ':' + sig,
         'date'         : date
       },
       options = { url: this._config.host + endpoint, method: method, headers: headers };
