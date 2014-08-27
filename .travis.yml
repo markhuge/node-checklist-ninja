@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- '0.10'
+- '0.11'
+deploy:
+  provider: npm
+  email: mark@segfawlt.net
+  api_key:
+    secure: Vunv1Y2ontGY4hFUFRv36rqvFzW1ANh8QZN5Zd/xx06N4OvKTcXE5iFcjCiNzfz1LIwmbVzNJqumwYNLBSGqE/PRcsqV2ryEnhu4ck2MliTvLpnq60pm5CNVHrFYYSB1r+3WakSY91ujRXk2OpsjYDiJXflVpAKBx32Uw9IyR0E=
+  on:
+    tags: true
+    repo: markhuge/node-checklist-ninja
