@@ -124,13 +124,13 @@ this.createChecklist = function(title, callback) {
   });
 };
 
-this.createItem = function(checklistId, displayText, parent, position, callback) {
+this.createItem = function(checklistId, displayText, group, position, callback) {
 
   // TODO: Ensure position is serialized as a number.
   var payload = {
-    'display_text': displayText,
-    'parent': parent,
-    'position': position
+    display_text: displayText,
+    group: group || checklistId,
+    position: position
   };
 
   this.put('/checklists/' + checklistId + '/items', payload, function(err, code, data) {
@@ -141,13 +141,13 @@ this.createItem = function(checklistId, displayText, parent, position, callback)
   });
 };
 
-this.createGroup = function(checklistId, label, parent, position, callback) {
+this.createGroup = function(checklistId, label, group, position, callback) {
 
   // TODO: Ensure position is serialized as a number.
   var payload = {
-    'label': label,
-    'parent': parent,
-    'position': position
+    label: label,
+    group: group || checklistId,
+    position: position
   };
 
   this.put('/checklists/' + checklistId + '/groups', payload, function(err, code, data) {

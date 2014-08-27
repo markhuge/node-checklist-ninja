@@ -14,7 +14,7 @@ describe("Items", function () {
   });
 
   it("Create Item", function (done) {
-    ninja.createItem(1234, "this is a new item", "parent?", 1, function (err, data) {
+    ninja.createItem(1234, "this is a new item", null, 1, function (err, data) {
       expect(err).to.not.be.ok;
       expect(data).to.have.deep.property('endpoint','/checklists/1234/items');
       expect(data.payload).to.have.deep.property('display_text', 'this is a new item');
