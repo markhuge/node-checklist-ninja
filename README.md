@@ -1,4 +1,4 @@
-# node-checklist-ninja
+# node-checklist-ninja [![Build Status](https://travis-ci.org/markhuge/node-checklist-ninja.svg?branch=0.1.3)](https://travis-ci.org/markhuge/node-checklist-ninja)
 
 > A Node.js module for interacting with the https://checklist.ninja API
 
