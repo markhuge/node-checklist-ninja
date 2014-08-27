@@ -11,10 +11,15 @@ var request = require('request'),
 // defaults
 this._config = { host: baseURI };
 
+function parseChecklistPayload(input) {
+  return parsePayload("title", input)
+}
+
 // prepare payloads
-function parsePayload(input) {
+function parsePayload(key, input) {
   if (typeof input === "object") { return input; }
-  var obj = { title: input };
+  var obj = { };
+  obj[key] = input
   return obj;
 }
 
@@ -114,17 +119,11 @@ this.getChecklistWebhooks = function(checklistId, callback) {
 
 
 this.createChecklist = function(title, callback) {
-  var payload = parsePayload(title);
-
-  this.put('/checklists', payload, function(err, code, data) {
-    if (!err && code == 201) {
-      return callback(null, data);
-    }
-    callback('Could not create checklist.');
-  });
+  var payload = parseChecklistPayload(title);
+  this.createOrFail('/checklists', payload, 'Could not create checklist.', callback)
 };
 
-this.createItem = function(checklistId, displayText, group, position, callback) {
+this.createItems = function(checklistId, displayText, group, position, callback) {
 
   // TODO: Ensure position is serialized as a number.
   var payload = {
@@ -133,15 +132,10 @@ this.createItem = function(checklistId, displayText, group, position, callback) 
     position: position
   };
 
-  this.put('/checklists/' + checklistId + '/items', payload, function(err, code, data) {
-    if (!err && code == 201) {
-      return callback(null, data);
-    }
-    callback('Could not create checklist item.');
-  });
+  this.createOrFail('/checklists/' + checklistId + '/items', payload, 'Could not create items.', callback)
 };
 
-this.createGroup = function(checklistId, label, group, position, callback) {
+this.createGroups = function(checklistId, label, group, position, callback) {
 
   // TODO: Ensure position is serialized as a number.
   var payload = {
@@ -150,17 +144,21 @@ this.createGroup = function(checklistId, label, group, position, callback) {
     position: position
   };
 
-  this.put('/checklists/' + checklistId + '/groups', payload, function(err, code, data) {
-    if (!err && code == 201) {
-      return callback(null, data);
-    }
-    callback('Could not create checklist group.');
-  });
+  this.createOrFail('/checklists/' + checklistId + '/groups', payload, 'Could not create groups.', callback)
 };
 
 this.getOrFail = function(endpoint, errmessage, callback) {
   this.get(endpoint, function(err, code, data) {
     if (!err && code == 200) {
+      return callback(null, data);
+    }
+    callback(errmessage);
+  });
+};
+
+this.createOrFail = function(endpoint, payload, errmessage, callback) {
+  this.put(endpoint, payload, function(err, code, data) {
+    if (!err && code == 201) {
       return callback(null, data);
     }
     callback(errmessage);

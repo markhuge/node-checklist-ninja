@@ -47,22 +47,22 @@ describe("Wrappers", function () {
       });
     });
 
-    it("post", function (done) {
-      ninja.post('/test', { foo: "bar" }, function (err, statuscode, body) {
+    it("put", function (done) {
+      ninja.put('/test', { foo: "bar" }, function (err, statuscode, body) {
         expect(err).to.not.be.ok;
-        expect(statuscode).to.equal(200);
-        expect(body).to.have.deep.property('method','POST');
+        expect(statuscode).to.equal(201);
+        expect(body).to.have.deep.property('method','PUT');
         expect(body.payload).to.have.deep.property('foo','bar');
         done();
       });
 
     });
 
-    it("put", function (done) {
-      ninja.put('/test', { foo: "bar" }, function (err, statuscode, body) {
+    it("post", function (done) {
+      ninja.post('/test', { foo: "bar" }, function (err, statuscode, body) {
         expect(err).to.not.be.ok;
-        expect(statuscode).to.equal(200);
-        expect(body).to.have.deep.property('method','PUT');
+        expect(statuscode).to.equal(204);
+        expect(body).to.have.deep.property('method','POST');
         expect(body.payload).to.have.deep.property('foo','bar');
         done();
       });
@@ -72,7 +72,7 @@ describe("Wrappers", function () {
     it("patch",function (done) {
       ninja.patch('/test', { foo: "bar" }, function (err, statuscode, body) {
         expect(err).to.not.be.ok;
-        expect(statuscode).to.equal(200);
+        expect(statuscode).to.equal(204);
         expect(body).to.have.deep.property('method','PATCH');
         expect(body.payload).to.have.deep.property('foo','bar');
         done();
@@ -83,7 +83,7 @@ describe("Wrappers", function () {
     it("delete",function (done){
       ninja.delete('/test', function (err, statuscode, body) {
         expect(err).to.not.be.ok;
-        expect(statuscode).to.equal(200);
+        expect(statuscode).to.equal(204);
         expect(body).to.have.deep.property('method','DELETE');
         done();
       });

@@ -14,7 +14,7 @@ describe("Groups", function () {
   });
 
   it("Create Group", function (done) {
-    ninja.createGroup(1234, "this is a group label", "parent?", 1, function (err, data) {
+    ninja.createGroups(1234, "this is a group label", "parent?", 1, function (err, data) {
       expect(err).to.not.be.ok;
       expect(data).to.have.deep.property('endpoint','/checklists/1234/groups');
       expect(data.payload).to.have.deep.property('label', 'this is a group label');
@@ -24,8 +24,8 @@ describe("Groups", function () {
   });
 
   it("Create Group fails on status code", function (done) {
-    ninja.createGroup(1234, "failcode", "parent?", 1, function (err, data) {
-      expect(err).to.equal('Could not create checklist group.');
+    ninja.createGroups(1234, "failcode", "parent?", 1, function (err, data) {
+      expect(err).to.equal('Could not create groups.');
       done();
     });
   });
