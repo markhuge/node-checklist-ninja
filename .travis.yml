@@ -10,3 +10,4 @@ deploy:
   on:
     tags: true
     repo: markhuge/node-checklist-ninja
+    all_branches: true
